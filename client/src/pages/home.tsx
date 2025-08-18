@@ -130,28 +130,37 @@ export default function Home() {
         <div className="max-w-2xl mx-auto space-y-8">
         
         {/* Header */}
-        <header className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-mystical-gold tracking-wide">
-            한 줄 예언
-          </h1>
-          <p className="text-mystical-silver text-lg">
+        <header className="text-center space-y-6">
+          <div className="space-y-2">
+            <h1 className="text-5xl font-bold text-shimmer tracking-wide floating-animation">
+              한 줄 예언
+            </h1>
+            <div className="w-24 h-px bg-gradient-to-r from-transparent via-mystical-gold to-transparent mx-auto"></div>
+          </div>
+          <p className="text-mystical-silver text-lg font-light tracking-wide">
             예언은 오늘 단 하나만 주어진다
           </p>
           
           {/* Status Chips */}
           <div className="flex flex-wrap justify-center gap-3 text-sm">
-            <div className="bg-mystical-dark/50 border border-mystical-gold/30 rounded-full px-3 py-1 text-mystical-silver">
-              오늘의 목소리: {getVoiceStyle()}
+            <div className="chip-enhanced rounded-full px-4 py-2 text-mystical-silver">
+              <span className="flex items-center space-x-2">
+                <div className="w-2 h-2 rounded-full bg-mystical-gold pulse-glow"></div>
+                <span>오늘의 목소리: {getVoiceStyle()}</span>
+              </span>
             </div>
-            <div className="bg-mystical-dark/50 border border-mystical-gold/30 rounded-full px-3 py-1 text-mystical-silver flex items-center space-x-1">
-              <Clock className="w-3 h-3" />
+            <div className="chip-enhanced rounded-full px-4 py-2 text-mystical-silver flex items-center space-x-2">
+              <Clock className="w-3 h-3 text-mystical-gold" />
               <span>{getNextFortuneText()}</span>
             </div>
             {hasProfile && (
               <Dialog open={showPersonalization} onOpenChange={setShowPersonalization}>
                 <DialogTrigger asChild>
-                  <button className="bg-mystical-gold/20 border border-mystical-gold/50 rounded-full px-3 py-1 text-mystical-gold hover:bg-mystical-gold/30 transition-colors">
-                    {getProfileChipText()}
+                  <button className="chip-enhanced bg-mystical-gold/15 border border-mystical-gold/40 rounded-full px-4 py-2 text-mystical-gold hover:bg-mystical-gold/25 interactive-button">
+                    <span className="flex items-center space-x-2">
+                      <User className="w-3 h-3" />
+                      <span>{getProfileChipText()}</span>
+                    </span>
                   </button>
                 </DialogTrigger>
                 <DialogContent className="bg-mystical-dark border-mystical-gold/30">
@@ -240,12 +249,12 @@ export default function Home() {
         <section className="flex justify-center space-x-4">
           <Sheet open={showHistory} onOpenChange={setShowHistory}>
             <SheetTrigger asChild>
-              <Button variant="outline" className="bg-mystical-dark/50 border-mystical-gold/30 text-mystical-silver hover:text-mystical-gold">
+              <Button variant="outline" className="mystical-glow-enhanced glass-morphism border-mystical-gold/30 text-mystical-silver hover:text-mystical-gold interactive-button">
                 <History className="w-4 h-4 mr-2" />
                 내 예언 기록
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="bg-mystical-dark border-mystical-gold/30 h-[80vh]">
+            <SheetContent side="bottom" className="mystical-gradient border-mystical-gold/30 h-[80vh]">
               <SheetHeader>
                 <SheetTitle className="text-mystical-gold">내 예언 기록</SheetTitle>
               </SheetHeader>
@@ -256,7 +265,7 @@ export default function Home() {
           <Button 
             variant="outline" 
             onClick={() => setShowSettings(!showSettings)}
-            className="bg-mystical-dark/50 border-mystical-gold/30 text-mystical-silver hover:text-mystical-gold"
+            className="mystical-glow-enhanced glass-morphism border-mystical-gold/30 text-mystical-silver hover:text-mystical-gold interactive-button"
           >
             <Settings className="w-4 h-4 mr-2" />
             설정

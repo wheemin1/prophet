@@ -275,7 +275,7 @@ export function FortuneDisplay({
     <div className="mb-8">
       <div 
         ref={sealRef}
-        className="relative cursor-pointer select-none"
+        className="relative cursor-pointer select-none seal-container p-8"
         onMouseDown={startSealBreaking}
         onMouseUp={stopSealBreaking}
         onMouseLeave={stopSealBreaking}
@@ -287,14 +287,20 @@ export function FortuneDisplay({
         onTouchCancel={stopSealBreaking}
       >
         <div className="aspect-square max-w-sm mx-auto relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-mystical-purple/30 to-mystical-blue/30 rounded-full border-4 border-mystical-gold/50 animate-glow">
-            <div className="absolute inset-6 border-2 border-mystical-gold/30 rounded-full">
-              <div className="absolute inset-6 border border-mystical-gold/20 rounded-full flex items-center justify-center">
-                <div className="w-16 h-16 text-mystical-gold/80">
-                  <svg viewBox="0 0 64 64" fill="currentColor" className="w-full h-full animate-pulse-mystical">
-                    <path d="M32 8L40 24H48L42 32L48 40H40L32 56L24 40H16L22 32L16 24H24L32 8Z"/>
-                    <circle cx="32" cy="32" r="4" fill="currentColor"/>
-                  </svg>
+          <div className="absolute inset-0 rune-enhanced rounded-full border-4 border-mystical-gold/60 animate-glow">
+            <div className="absolute inset-4 border-2 border-mystical-gold/40 rounded-full">
+              <div className="absolute inset-4 border border-mystical-gold/25 rounded-full">
+                <div className="absolute inset-6 border border-mystical-gold/15 rounded-full flex items-center justify-center">
+                  <div className="w-20 h-20 text-mystical-gold floating-animation">
+                    <svg viewBox="0 0 64 64" fill="currentColor" className="w-full h-full animate-pulse-mystical">
+                      <path d="M32 8L40 24H48L42 32L48 40H40L32 56L24 40H16L22 32L16 24H24L32 8Z"/>
+                      <circle cx="32" cy="32" r="4" fill="currentColor"/>
+                      <circle cx="32" cy="20" r="1.5" fill="currentColor" opacity="0.7"/>
+                      <circle cx="32" cy="44" r="1.5" fill="currentColor" opacity="0.7"/>
+                      <circle cx="20" cy="32" r="1.5" fill="currentColor" opacity="0.7"/>
+                      <circle cx="44" cy="32" r="1.5" fill="currentColor" opacity="0.7"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -319,11 +325,12 @@ export function FortuneDisplay({
           </div>
         </div>
 
-        <div className="text-center mt-6">
-          <p className="text-mystical-gold font-medium mb-2">봉인 의식</p>
+        <div className="text-center mt-8 space-y-3">
+          <h3 className="text-mystical-gold font-medium text-lg tracking-wide">봉인 의식</h3>
+          <div className="w-16 h-px bg-gradient-to-r from-transparent via-mystical-gold/50 to-transparent mx-auto"></div>
           <p className="text-sm text-mystical-silver leading-relaxed">
             룬을 3초간 길게 누르면 예언이 공개됩니다.<br />
-            데스크톱: 스페이스바 3초 홀드
+            <span className="text-mystical-gold/70">데스크톱: 스페이스바 3초 홀드</span>
           </p>
         </div>
       </div>
