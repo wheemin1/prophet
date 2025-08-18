@@ -25,11 +25,11 @@ export function FortuneDisplay({
   const [progress, setProgress] = useState(0);
   const [showFortune, setShowFortune] = useState(!!fortune);
   const [reaction, setReaction] = useState<"positive" | "neutral" | null>(null);
-  
+
   const pressTimer = useRef<NodeJS.Timeout | null>(null);
   const progressInterval = useRef<NodeJS.Timeout | null>(null);
   const sealRef = useRef<HTMLDivElement>(null);
-  
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -41,22 +41,22 @@ export function FortuneDisplay({
 
   const startSealBreaking = () => {
     if (isPressed || showFortune || isGenerating) return;
-    
+
     setIsPressed(true);
     let currentProgress = 0;
     const duration = 3000; // 3 seconds
     const interval = 50;
-    
+
     // Haptic feedback
     if ('vibrate' in navigator && settings.motionEnabled) {
       navigator.vibrate([50, 100, 50]);
     }
-    
+
     progressInterval.current = setInterval(() => {
       currentProgress += interval;
       const progressPercent = (currentProgress / duration) * 100;
       setProgress(progressPercent);
-      
+
       if (currentProgress >= duration) {
         clearInterval(progressInterval.current!);
         breakSeal();
@@ -66,18 +66,18 @@ export function FortuneDisplay({
 
   const stopSealBreaking = () => {
     if (!isPressed) return;
-    
+
     if (progressInterval.current) {
       clearInterval(progressInterval.current);
     }
-    
+
     // 400ms grace period before reset
     setTimeout(() => {
       if (!isPressed) {
         setProgress(0);
       }
     }, 400);
-    
+
     setIsPressed(false);
   };
 
@@ -85,7 +85,7 @@ export function FortuneDisplay({
     if (settings.motionEnabled && 'vibrate' in navigator) {
       navigator.vibrate(100);
     }
-    
+
     onGenerate();
     setShowFortune(true);
     setProgress(0);
@@ -94,9 +94,9 @@ export function FortuneDisplay({
 
   const handleShare = async () => {
     if (!fortune) return;
-    
+
     const text = `${fortune.text}\n\n${getAddresseeText()}\n\n한줄신탁에서 받은 예언`;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -123,14 +123,14 @@ export function FortuneDisplay({
 
   const handleSaveCard = async () => {
     if (!fortune) return;
-    
+
     try {
       const canvas = await generateFortuneCard(fortune, getAddresseeText());
       const link = document.createElement('a');
       link.download = `한줄신탁_${new Date().toISOString().split('T')[0]}.png`;
       link.href = canvas.toDataURL();
       link.click();
-      
+
       toast({
         title: "카드 저장 완료",
         description: "예언 카드가 저장되었습니다.",
@@ -151,7 +151,7 @@ export function FortuneDisplay({
       const updatedFortune = { ...fortune, reaction: reactionType };
       // This would be handled by the parent component or a hook
     }
-    
+
     toast({
       title: "반응 저장됨",
       description: "당신의 반응이 브라우저에 저장되었습니다.",
@@ -172,17 +172,17 @@ export function FortuneDisplay({
         startSealBreaking();
       }
     };
-    
+
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.code === 'Space' && !showFortune) {
         e.preventDefault();
         stopSealBreaking();
       }
     };
-    
+
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
-    
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
@@ -203,19 +203,19 @@ export function FortuneDisplay({
             </h3>
             <div className="w-16 h-px bg-gradient-to-r from-transparent via-mystical-gold to-transparent mx-auto"></div>
           </div>
-          
+
           <div className="text-center">
             <p className="fortune-text font-medium text-mystical-glow mb-6 animate-fortune-reveal">
               {fortune.text}
             </p>
-            
+
             {getAddresseeText() && (
               <p className="text-mystical-silver text-sm">
                 {getAddresseeText()}
               </p>
             )}
           </div>
-          
+
           {/* Action Buttons */}
           <div className="bento-grid mt-8">
             <Button
@@ -223,18 +223,18 @@ export function FortuneDisplay({
               className="functional-button bg-mystical-gold/20 text-mystical-gold border border-mystical-gold/50 hover:bg-mystical-gold/30 hover:border-mystical-gold flex items-center justify-center space-x-2"
             >
               <Share2 className="w-4 h-4" />
-              <span className="text-label">카드 공유</span>
+              <span className="text-label">공유</span>
             </Button>
-            
+
             <Button
               onClick={handleSaveCard}
               className="functional-button bg-mystical-purple/30 text-mystical-silver border border-mystical-silver/30 hover:bg-mystical-purple/50 hover:border-mystical-silver flex items-center justify-center space-x-2"
             >
               <Download className="w-4 h-4" />
-              <span className="text-label">이미지 저장</span>
+              <span className="text-label">카드 저장</span>
             </Button>
           </div>
-          
+
           {/* Reaction Buttons */}
           <div className="flex justify-center space-x-4 mt-6 pt-6 border-t border-mystical-gold/20">
             <Button
@@ -262,7 +262,7 @@ export function FortuneDisplay({
               <span className="text-sm">미묘해</span>
             </Button>
           </div>
-          
+
           <p className="text-xs text-mystical-silver/70 text-center mt-2">
             당신의 반응은 브라우저에만 저장됩니다
           </p>
@@ -299,7 +299,7 @@ export function FortuneDisplay({
               </div>
             </div>
           </div>
-          
+
           {/* Progress ring */}
           <div className={`absolute inset-0 transition-opacity duration-200 ${isPressed ? 'opacity-100' : 'opacity-0'}`}>
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 200 200">
@@ -318,7 +318,7 @@ export function FortuneDisplay({
             </svg>
           </div>
         </div>
-        
+
         <div className="text-center mt-6">
           <p className="text-mystical-gold font-medium mb-2">봉인 의식</p>
           <p className="text-sm text-mystical-silver leading-relaxed">

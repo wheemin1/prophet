@@ -16,20 +16,20 @@ export function HistoryList({ period }: HistoryListProps) {
     monthly: {},
     yearly: {},
   });
-  
+
   const [showAll, setShowAll] = useState(false);
-  
+
   const periodHistory = Object.values(history[period] || {})
     .sort((a, b) => new Date(b.generatedAt).getTime() - new Date(a.generatedAt).getTime());
-  
+
   const displayedHistory = showAll ? periodHistory : periodHistory.slice(0, 3);
-  
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
     const yesterday = new Date(now);
     yesterday.setDate(yesterday.getDate() - 1);
-    
+
     if (date.toDateString() === now.toDateString()) {
       return "오늘";
     } else if (date.toDateString() === yesterday.toDateString()) {
@@ -55,11 +55,8 @@ export function HistoryList({ period }: HistoryListProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8">
-            <p className="text-mystical-silver mb-2">아직 예언 기록이 없습니다.</p>
-            <p className="text-sm text-mystical-silver/70">
-              첫 예언을 받아보세요!
-            </p>
+          <div className="text-center py-8 text-mystical-silver">
+            <p>아직 예언 기록이 없습니다. 첫 예언을 받아보세요!</p>
           </div>
         </CardContent>
       </Card>
@@ -108,7 +105,7 @@ export function HistoryList({ period }: HistoryListProps) {
             </div>
           ))}
         </div>
-        
+
         {periodHistory.length > 3 && (
           <div className="mt-4 text-center">
             <Button

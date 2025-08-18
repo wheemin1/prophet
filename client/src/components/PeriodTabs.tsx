@@ -1,35 +1,37 @@
+
 import { Period } from "@shared/schema";
-import { Button } from "@/components/ui/button";
 
 interface PeriodTabsProps {
   selectedPeriod: Period;
   onPeriodChange: (period: Period) => void;
 }
 
-const periods = [
-  { id: "daily" as Period, label: "오늘", tone: "밈" },
-  { id: "weekly" as Period, label: "이주", tone: "반진지" },
-  { id: "monthly" as Period, label: "이달", tone: "장엄" },
-  { id: "yearly" as Period, label: "올해", tone: "신탁" },
-];
+const periodLabels = {
+  daily: { main: "오늘", sub: "밈" },
+  weekly: { main: "이주", sub: "반진지" },
+  monthly: { main: "이달", sub: "장엄" },
+  yearly: { main: "올해", sub: "신탁" }
+};
 
 export function PeriodTabs({ selectedPeriod, onPeriodChange }: PeriodTabsProps) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-3 bg-mystical-purple/20 rounded-2xl border border-mystical-gold/20">
-      {periods.map((period) => (
-        <Button
-          key={period.id}
-          onClick={() => onPeriodChange(period.id)}
-          className={`functional-button flex flex-col items-center gap-1 p-3 h-auto transition-all duration-200 ${
-            selectedPeriod === period.id
-              ? "bg-mystical-gold text-mystical-dark"
-              : "text-mystical-silver hover:bg-mystical-purple/30 bg-transparent border-none"
-          }`}
-        >
-          <span className="text-sm font-medium">{period.label}</span>
-          <span className="text-xs text-label opacity-70">{period.tone}</span>
-        </Button>
-      ))}
+    <div className="flex justify-center mb-8">
+      <div className="bg-mystical-dark/50 backdrop-blur-sm rounded-lg p-1 border border-mystical-gold/20">
+        {(Object.keys(periodLabels) as Period[]).map((period) => (
+          <button
+            key={period}
+            onClick={() => onPeriodChange(period)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex flex-col items-center ${
+              selectedPeriod === period
+                ? "bg-mystical-gold/20 text-mystical-gold border border-mystical-gold/50"
+                : "text-mystical-silver hover:text-white hover:bg-mystical-gold/10"
+            }`}
+          >
+            <span className="text-base">{periodLabels[period].main}</span>
+            <span className="text-xs opacity-70">{periodLabels[period].sub}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 {
-  "name": "한줄신탁",
-  "short_name": "한줄신탁",
+  "name": "한 줄 예언",
+  "short_name": "한 줄 예언",
   "description": "오늘은 단 하나의 예언만 주어진다",
   "start_url": "/",
   "display": "standalone",
