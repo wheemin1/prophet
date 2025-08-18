@@ -44,25 +44,16 @@ export function useFortune(profile: UserProfile, period: Period) {
     
     switch (period) {
       case "daily": {
-        const tomorrow = new Date(seoulTime);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0);
         return `내일 00:00 (Asia/Seoul)`;
       }
       case "weekly": {
-        const nextWeek = new Date(seoulTime);
-        nextWeek.setDate(nextWeek.getDate() + (7 - nextWeek.getDay()));
-        return `다음 주 월요일 (Asia/Seoul)`;
+        return `다음 주 월요일 00:00 (Asia/Seoul)`;
       }
       case "monthly": {
-        const nextMonth = new Date(seoulTime);
-        nextMonth.setMonth(nextMonth.getMonth() + 1, 1);
-        return `다음 달 1일 (Asia/Seoul)`;
+        return `다음 달 1일 00:00 (Asia/Seoul)`;
       }
       case "yearly": {
-        const nextYear = new Date(seoulTime);
-        nextYear.setFullYear(nextYear.getFullYear() + 1, 0, 1);
-        return `내년 1월 1일 (Asia/Seoul)`;
+        return `내년 1월 1일 00:00 (Asia/Seoul)`;
       }
     }
   };
@@ -70,7 +61,8 @@ export function useFortune(profile: UserProfile, period: Period) {
   // Load current fortune
   useEffect(() => {
     const periodKey = getCurrentPeriodKey(period);
-    const existingFortune = fortuneHistory[period]?.[periodKey];
+    const periodHistory = fortuneHistory[period] as Record<string, Fortune>;
+    const existingFortune = periodHistory?.[periodKey];
     
     if (existingFortune) {
       setCurrentFortune(existingFortune);

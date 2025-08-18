@@ -41,17 +41,23 @@ export function HistoryList({ period }: HistoryListProps) {
 
   if (periodHistory.length === 0) {
     return (
-      <Card className="bg-mystical-purple/10 border-mystical-gold/10 backdrop-blur-sm">
+      <Card className="dynamic-card bg-mystical-purple/10 border-mystical-gold/10 backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="text-lg text-mystical-gold flex items-center space-x-2">
             <Clock className="w-5 h-5" />
             <span>내 예언 기록</span>
+            <span className="text-xs text-label text-mystical-silver/70 ml-auto">
+              {period === "daily" && "일별"} 
+              {period === "weekly" && "주별"} 
+              {period === "monthly" && "월별"} 
+              {period === "yearly" && "연별"}
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
-            <p className="text-mystical-silver">아직 예언 기록이 없습니다.</p>
-            <p className="text-sm text-mystical-silver/70 mt-2">
+            <p className="text-mystical-silver mb-2">아직 예언 기록이 없습니다.</p>
+            <p className="text-sm text-mystical-silver/70">
               첫 예언을 받아보세요!
             </p>
           </div>
@@ -61,11 +67,17 @@ export function HistoryList({ period }: HistoryListProps) {
   }
 
   return (
-    <Card className="bg-mystical-purple/10 border-mystical-gold/10 backdrop-blur-sm">
+    <Card className="dynamic-card bg-mystical-purple/10 border-mystical-gold/10 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="text-lg text-mystical-gold flex items-center space-x-2">
           <Clock className="w-5 h-5" />
           <span>내 예언 기록</span>
+          <span className="text-xs text-label text-mystical-silver/70 ml-auto">
+            {period === "daily" && "일별"} 
+            {period === "weekly" && "주별"} 
+            {period === "monthly" && "월별"} 
+            {period === "yearly" && "연별"}
+          </span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -100,11 +112,12 @@ export function HistoryList({ period }: HistoryListProps) {
         {periodHistory.length > 3 && (
           <div className="mt-4 text-center">
             <Button
-              variant="ghost"
               onClick={() => setShowAll(!showAll)}
-              className="text-sm text-mystical-gold hover:text-mystical-glow"
+              className="functional-button bg-mystical-purple/20 text-mystical-silver hover:bg-mystical-purple/30 hover:text-mystical-gold border border-mystical-silver/20 hover:border-mystical-gold/30"
             >
-              {showAll ? "접기" : "전체 기록 보기"}
+              <span className="text-label">
+                {showAll ? "접기" : `${periodHistory.length - 3}개 더 보기`}
+              </span>
             </Button>
           </div>
         )}

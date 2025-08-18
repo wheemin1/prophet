@@ -191,9 +191,9 @@ export function FortuneDisplay({
 
   if (showFortune && fortune) {
     return (
-      <Card className="mystical-gradient border-mystical-gold/30 relative overflow-hidden">
+      <Card className="dynamic-card mystical-gradient border-mystical-gold/30 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5 runic-pattern"></div>
-        <CardContent className="p-8 relative">
+        <CardContent className="p-6 md:p-8 relative">
           <div className="text-center mb-6">
             <h3 className="text-sm text-mystical-gold font-medium mb-2">
               {fortune.period === "daily" && "오늘의 예언"}
@@ -205,7 +205,7 @@ export function FortuneDisplay({
           </div>
           
           <div className="text-center">
-            <p className="text-xl md:text-2xl font-medium leading-relaxed text-mystical-glow mb-6 animate-fortune-reveal">
+            <p className="fortune-text font-medium text-mystical-glow mb-6 animate-fortune-reveal">
               {fortune.text}
             </p>
             
@@ -217,21 +217,21 @@ export function FortuneDisplay({
           </div>
           
           {/* Action Buttons */}
-          <div className="flex flex-wrap justify-center gap-4 mt-8">
+          <div className="bento-grid mt-8">
             <Button
               onClick={handleShare}
-              className="flex items-center space-x-2 bg-mystical-gold/20 text-mystical-gold border border-mystical-gold/50 hover:bg-mystical-gold/30 hover:border-mystical-gold"
+              className="functional-button bg-mystical-gold/20 text-mystical-gold border border-mystical-gold/50 hover:bg-mystical-gold/30 hover:border-mystical-gold flex items-center justify-center space-x-2"
             >
               <Share2 className="w-4 h-4" />
-              <span>공유</span>
+              <span className="text-label">카드 공유</span>
             </Button>
             
             <Button
               onClick={handleSaveCard}
-              className="flex items-center space-x-2 bg-mystical-purple/30 text-mystical-silver border border-mystical-silver/30 hover:bg-mystical-purple/50 hover:border-mystical-silver"
+              className="functional-button bg-mystical-purple/30 text-mystical-silver border border-mystical-silver/30 hover:bg-mystical-purple/50 hover:border-mystical-silver flex items-center justify-center space-x-2"
             >
               <Download className="w-4 h-4" />
-              <span>저장</span>
+              <span className="text-label">이미지 저장</span>
             </Button>
           </div>
           
@@ -321,11 +321,9 @@ export function FortuneDisplay({
         
         <div className="text-center mt-6">
           <p className="text-mystical-gold font-medium mb-2">봉인 의식</p>
-          <p className="text-sm text-mystical-silver">
-            원을 3초간 길게 누르면 예언이 공개됩니다
-          </p>
-          <p className="text-xs text-mystical-silver/70 mt-1">
-            데스크톱: 스페이스바 3초간 홀드
+          <p className="text-sm text-mystical-silver leading-relaxed">
+            룬을 3초간 길게 누르면 예언이 공개됩니다.<br />
+            데스크톱: 스페이스바 3초 홀드
           </p>
         </div>
       </div>
