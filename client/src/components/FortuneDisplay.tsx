@@ -8,10 +8,10 @@ import { generateFortuneCard } from "@/lib/canvas-generator";
 
 interface FortuneDisplayProps {
   fortune: Fortune | null;
-  profile: UserProfile;
+  profile: { name?: string; birthdate?: string; honorificStyle?: string };
   isGenerating: boolean;
   onGenerate: () => void;
-  settings: Settings;
+  settings: { motionEnabled?: boolean; soundEffects?: boolean; notifications?: boolean };
 }
 
 export function FortuneDisplay({ 
@@ -159,7 +159,7 @@ export function FortuneDisplay({
   };
 
   const getAddresseeText = () => {
-    if (!profile.name) return "";
+    if (!profile?.name) return "";
     const honorific = profile.honorificStyle === "full" ? "여" : "님";
     return `${profile.name}${honorific}에게`;
   };

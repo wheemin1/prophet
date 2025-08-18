@@ -177,9 +177,10 @@ export default function Home() {
             {/* Fortune Display Component */}
             <FortuneDisplay
               fortune={currentFortune}
+              profile={profile}
               isGenerating={isGenerating}
               onGenerate={generateFortune}
-              period={selectedPeriod}
+              settings={settings}
             />
             
             {/* 안내 문구 */}
@@ -226,9 +227,10 @@ export default function Home() {
               <h2 className="text-2xl font-semibold text-mystical-gold">오늘의 예언</h2>
               <FortuneDisplay
                 fortune={currentFortune}
+                profile={profile}
                 isGenerating={isGenerating}
                 onGenerate={generateFortune}
-                period={selectedPeriod}
+                settings={settings}
               />
             </div>
           </section>
