@@ -102,7 +102,7 @@ export async function generateFortuneCard(fortune: Fortune, addressee: string): 
   // Add app name
   ctx.fillStyle = '#D4AF37';
   ctx.font = 'bold 24px "Noto Sans KR", sans-serif';
-  ctx.fillText('한줄신탁', canvas.width / 2, canvas.height - 120);
+  ctx.fillText('한 줄 예언', canvas.width / 2, canvas.height - 120);
   
   // Add timestamp
   ctx.fillStyle = '#C0C0C0';

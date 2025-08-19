@@ -1,6 +1,5 @@
 import { Fortune, UserProfile, Period } from "@shared/schema";
 import { getTemplatesByPeriod } from "./templates";
-import { randomUUID } from "crypto";
 
 // Simple hash function for deterministic seeding
 function hashString(str: string): number {

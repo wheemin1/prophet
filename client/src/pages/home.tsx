@@ -41,23 +41,71 @@ export default function Home() {
   const [showPersonalization, setShowPersonalization] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
-  const [showInstallBanner, setShowInstallBanner] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [countdown, setCountdown] = useState("계산 중...");
 
   const { currentFortune, nextFortuneTime, generateFortune, isGenerating } = useFortune(
     profile,
     selectedPeriod
   );
 
-  // PWA install banner logic
-  useEffect(() => {
-    const visitCount = parseInt(localStorage.getItem("visitCount") || "0") + 1;
-    localStorage.setItem("visitCount", visitCount.toString());
-    
-    if (visitCount > 1) {
-      setShowInstallBanner(true);
+  // 시간 계산 함수들
+  const getTimeUntilNext = (period: Period): string => {
+    const now = new Date();
+    const seoulTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    let nextTime: Date;
+
+    switch (period) {
+      case "daily":
+        nextTime = new Date(seoulTime);
+        nextTime.setDate(nextTime.getDate() + 1);
+        nextTime.setHours(0, 0, 0, 0);
+        break;
+      case "weekly":
+        nextTime = new Date(seoulTime);
+        const daysUntilMonday = (7 - seoulTime.getDay() + 1) % 7 || 7;
+        nextTime.setDate(nextTime.getDate() + daysUntilMonday);
+        nextTime.setHours(0, 0, 0, 0);
+        break;
+      case "monthly":
+        nextTime = new Date(seoulTime.getFullYear(), seoulTime.getMonth() + 1, 1);
+        break;
+      case "yearly":
+        nextTime = new Date(seoulTime.getFullYear() + 1, 0, 1);
+        break;
+      default:
+        nextTime = new Date(seoulTime);
+        nextTime.setDate(nextTime.getDate() + 1);
+        nextTime.setHours(0, 0, 0, 0);
     }
-  }, []);
+
+    const diff = nextTime.getTime() - seoulTime.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (hours > 24) {
+      const days = Math.floor(hours / 24);
+      return `${days}일 ${hours % 24}시간 ${minutes}분`;
+    }
+    return `${hours}시간 ${minutes}분`;
+  };
+
+  // 카운트다운 업데이트
+  useEffect(() => {
+    const updateCountdown = () => {
+      setCountdown(getTimeUntilNext(selectedPeriod));
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 60000); // 1분마다 업데이트
+
+    return () => clearInterval(interval);
+  }, [selectedPeriod]);
+
+  // 기간 변경시 카운트다운 업데이트
+  useEffect(() => {
+    setCountdown(getTimeUntilNext(selectedPeriod));
+  }, [selectedPeriod]);
 
   // Auto-collapse personalization after applying
   useEffect(() => {
@@ -78,54 +126,22 @@ export default function Home() {
   };
 
   const getNextFortuneText = () => {
-    const now = new Date();
-    let nextTime: Date;
-    
     switch (selectedPeriod) {
       case "daily":
-        nextTime = new Date(now);
-        nextTime.setDate(nextTime.getDate() + 1);
-        nextTime.setHours(0, 0, 0, 0);
-        return "다음 예언: 내일 00:00 (Asia/Seoul)";
+        return `다음 예언: ${countdown} 후 · 내일 00:00 (Asia/Seoul)`;
       case "weekly":
-        nextTime = new Date(now);
-        const daysUntilMonday = (7 - now.getDay() + 1) % 7 || 7;
-        nextTime.setDate(nextTime.getDate() + daysUntilMonday);
-        nextTime.setHours(0, 0, 0, 0);
-        return "다음 예언: 다음 주 월요일 00:00 (Asia/Seoul)";
+        return `다음 예언: ${countdown} 후 · 다음 주 월요일 00:00 (Asia/Seoul)`;
       case "monthly":
-        nextTime = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-        return "다음 예언: 다음 달 1일 00:00 (Asia/Seoul)";
+        return `다음 예언: ${countdown} 후 · 다음 달 1일 00:00 (Asia/Seoul)`;
       case "yearly":
-        nextTime = new Date(now.getFullYear() + 1, 0, 1);
-        return "다음 예언: 내년 1월 1일 00:00 (Asia/Seoul)";
+        return `다음 예언: ${countdown} 후 · 내년 1월 1일 00:00 (Asia/Seoul)`;
       default:
-        return "다음 예언: 내일 00:00 (Asia/Seoul)";
+        return `다음 예언: ${countdown} 후 · 내일 00:00 (Asia/Seoul)`;
     }
   };
 
   return (
     <div className="min-h-screen bg-mystical-dark text-white font-korean">
-      {/* PWA Install Banner */}
-      {showInstallBanner && (
-        <div className="fixed top-0 left-0 right-0 bg-mystical-purple/90 backdrop-blur-sm text-white p-3 z-50 border-b border-mystical-gold/20">
-          <div className="container mx-auto flex items-center justify-between text-sm">
-            <span className="flex items-center space-x-2">
-              <svg className="w-4 h-4 text-mystical-gold" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-              </svg>
-              <span>홈 화면에 추가하면 더 빨라요</span>
-            </span>
-            <button 
-              onClick={() => setShowInstallBanner(false)} 
-              className="text-mystical-gold hover:text-mystical-glow"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
-      )}
-
       <main className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto space-y-8">
         
@@ -146,7 +162,7 @@ export default function Home() {
             <div className="chip-enhanced rounded-full px-4 py-2 text-mystical-silver">
               <span className="flex items-center space-x-2">
                 <div className="w-2 h-2 rounded-full bg-mystical-gold pulse-glow"></div>
-                <span>오늘의 목소리: {getVoiceStyle()}</span>
+                <span>오늘의 목소리: {getVoiceStyle()} (자동)</span>
               </span>
             </div>
             <div className="chip-enhanced rounded-full px-4 py-2 text-mystical-silver flex items-center space-x-2">
@@ -233,7 +249,12 @@ export default function Home() {
           /* 예언 공개 상태 */
           <section className="space-y-6">
             <div className="text-center space-y-4">
-              <h2 className="text-2xl font-semibold text-mystical-gold">오늘의 예언</h2>
+              <h2 className="text-2xl font-semibold text-mystical-gold">
+                {selectedPeriod === "daily" && "오늘의 예언"}
+                {selectedPeriod === "weekly" && "이주의 예언"}
+                {selectedPeriod === "monthly" && "이달의 예언"}
+                {selectedPeriod === "yearly" && "올해의 예언"}
+              </h2>
               <FortuneDisplay
                 fortune={currentFortune}
                 profile={profile}
