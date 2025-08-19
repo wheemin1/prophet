@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Period } from "@shared/schema";
+import { Period, UserProfile, Settings } from "@shared/schema";
 import { FortuneDisplay } from "@/components/FortuneDisplay";
 import { PeriodTabs } from "@/components/PeriodTabs";
 import { PersonalizationForm } from "@/components/PersonalizationForm";
@@ -11,31 +11,22 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Clock, User, Info, Settings, History } from "lucide-react";
-
-interface Profile {
-  name: string;
-  birthdate: string;
-  timezone: string;
-}
-
-interface Settings {
-  notifications: boolean;
-  soundEffects: boolean;
-  shareAnalytics: boolean;
-}
+import { Clock, User, Info, Settings as SettingsIcon, History } from "lucide-react";
 
 export default function Home() {
   const [selectedPeriod, setSelectedPeriod] = useState<Period>("daily");
-  const [profile, setProfile] = useLocalStorage<Profile>("profile", {
+  const [profile, setProfile] = useLocalStorage<UserProfile>("profile", {
     name: "",
     birthdate: "",
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    createdAt: new Date().toISOString(),
+    honorificStyle: "short" as const,
   });
   const [settings, setSettings] = useLocalStorage<Settings>("settings", {
-    notifications: true,
-    soundEffects: true,
-    shareAnalytics: false,
+    soundEnabled: true,
+    motionEnabled: true,
+    theme: "dark" as const,
+    consentGiven: false,
   });
   
   const [showPersonalization, setShowPersonalization] = useState(false);
@@ -279,7 +270,7 @@ export default function Home() {
               <SheetHeader>
                 <SheetTitle className="text-mystical-gold">내 예언 기록</SheetTitle>
               </SheetHeader>
-              <HistoryList />
+              <HistoryList period={selectedPeriod} />
             </SheetContent>
           </Sheet>
 
@@ -288,7 +279,7 @@ export default function Home() {
             onClick={() => setShowSettings(!showSettings)}
             className="mystical-glow-enhanced glass-morphism border-mystical-gold/30 text-mystical-silver hover:text-mystical-gold interactive-button"
           >
-            <Settings className="w-4 h-4 mr-2" />
+            <SettingsIcon className="w-4 h-4 mr-2" />
             설정
           </Button>
         </section>
