@@ -18,17 +18,27 @@ export function useFortune(profile: UserProfile, period: Period) {
   // Get current period key
   const getCurrentPeriodKey = (period: Period): string => {
     const now = new Date();
+    // 정확한 Seoul 시간 계산
     const seoulTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
     
     switch (period) {
       case "daily":
         return seoulTime.toISOString().split('T')[0]; // YYYY-MM-DD
       case "weekly": {
-        const year = seoulTime.getFullYear();
-        const firstDayOfYear = new Date(year, 0, 1);
-        const pastDaysOfYear = (seoulTime.getTime() - firstDayOfYear.getTime()) / 86400000;
-        const week = Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-        return `${year}-W${week.toString().padStart(2, '0')}`;
+        // 현재 주의 월요일을 기준으로 키 생성
+        const currentDate = new Date(seoulTime);
+        const dayOfWeek = currentDate.getDay(); // 0=일요일, 1=월요일
+        
+        // 이번 주 월요일 찾기 (일요일이면 지난 월요일, 아니면 이번 주 월요일)
+        const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        const thisMonday = new Date(currentDate);
+        thisMonday.setDate(currentDate.getDate() + daysToMonday);
+        
+        const year = thisMonday.getFullYear();
+        const month = thisMonday.getMonth() + 1;
+        const date = thisMonday.getDate();
+        
+        return `${year}-W${month.toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`;
       }
       case "monthly":
         return `${seoulTime.getFullYear()}-${(seoulTime.getMonth() + 1).toString().padStart(2, '0')}`;

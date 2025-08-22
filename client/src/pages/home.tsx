@@ -52,17 +52,19 @@ export default function Home() {
         nextTime.setDate(nextTime.getDate() + 1);
         nextTime.setHours(0, 0, 0, 0);
         break;
-      case "weekly":
+      case "weekly": {
         nextTime = new Date(seoulTime);
-        const daysUntilMonday = (7 - seoulTime.getDay() + 1) % 7 || 7;
+        const currentDay = nextTime.getDay(); // 0=일, 1=월
+        const daysUntilMonday = currentDay === 0 ? 1 : (8 - currentDay); // 다음 월요일까지 일수
         nextTime.setDate(nextTime.getDate() + daysUntilMonday);
         nextTime.setHours(0, 0, 0, 0);
         break;
+      }
       case "monthly":
-        nextTime = new Date(seoulTime.getFullYear(), seoulTime.getMonth() + 1, 1);
+        nextTime = new Date(seoulTime.getFullYear(), seoulTime.getMonth() + 1, 1, 0, 0, 0, 0);
         break;
       case "yearly":
-        nextTime = new Date(seoulTime.getFullYear() + 1, 0, 1);
+        nextTime = new Date(seoulTime.getFullYear() + 1, 0, 1, 0, 0, 0, 0);
         break;
       default:
         nextTime = new Date(seoulTime);
@@ -70,15 +72,28 @@ export default function Home() {
         nextTime.setHours(0, 0, 0, 0);
     }
 
-    const diff = nextTime.getTime() - seoulTime.getTime();
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    // Seoul 시간으로 변환된 다음 시간 계산
+    const seoulNextTime = new Date(nextTime.toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
+    const diff = seoulNextTime.getTime() - seoulTime.getTime();
 
-    if (hours > 24) {
-      const days = Math.floor(hours / 24);
-      return `${days}일 ${hours % 24}시간 ${minutes}분`;
+    if (diff <= 0) {
+      return "곧 새로운 예언이 시작됩니다";
     }
-    return `${hours}시간 ${minutes}분`;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    if (days > 0) {
+      return `${days}일 ${hours}시간 ${minutes}분`;
+    } else if (hours > 0) {
+      return `${hours}시간 ${minutes}분 ${seconds}초`;
+    } else if (minutes > 0) {
+      return `${minutes}분 ${seconds}초`;
+    } else {
+      return `${seconds}초`;
+    }
   };
 
   // 카운트다운 업데이트
@@ -88,7 +103,7 @@ export default function Home() {
     };
 
     updateCountdown();
-    const interval = setInterval(updateCountdown, 60000); // 1분마다 업데이트
+    const interval = setInterval(updateCountdown, 1000); // 1초마다 업데이트
 
     return () => clearInterval(interval);
   }, [selectedPeriod]);

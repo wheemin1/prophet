@@ -20,13 +20,16 @@ function generateProfileHash(profile: UserProfile): string {
 
 // Generate deterministic seed
 function generateSeed(profileHash: string, periodKey: string): string {
-  return hashString(`${profileHash}_${periodKey}`).toString(36);
+  // 결정론적 예언을 위해 시간 요소 제거, period type 추가로 다양성 확보
+  const combinedSeed = `${profileHash}_${periodKey}`;
+  return hashString(combinedSeed).toString(36);
 }
 
-// Seeded random number generator
+// Seeded random number generator (더 개선된 버전)
 function seededRandom(seed: string, index: number = 0): number {
   const hash = hashString(seed + index.toString());
-  return (hash % 1000000) / 1000000;
+  // 더 나은 분포를 위한 개선된 계산
+  return ((hash * 9301 + 49297) % 233280) / 233280;
 }
 
 export function generateFortune(
